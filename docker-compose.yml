@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  web:
+    platform: linux/amd64
+    build: .
+    command: /start
+    volumes:
+      - static_vol:/app/static/
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+  db:
+    platform: linux/amd64
+    image: postgres:14-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=butfit
+      - POSTGRES_PASSWORD=butfit
+      - POSTGRES_DB=butfit
+    ports:
+      - "5432:5432"
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    volumes:
+      - static_vol:/app/static/
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  static_vol:

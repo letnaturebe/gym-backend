@@ -120,6 +120,7 @@ class PurchaseCredit(Credit):
 
     class Meta:
         proxy = True
+        ordering = ['start_date']
 
     @property
     def remaining_count(self) -> int:

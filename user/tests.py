@@ -15,8 +15,8 @@ from lesson.models import Gym, LessonType, Lesson, Reservation
 
 class UserTestCase(BaseTest):
     lesson_data = {
-        'gym': Gym.YEOKSAM,
-        'type': LessonType.MONSTER,
+        'gym': Gym.SEOUL,
+        'type': LessonType.YOGA,
         'credit_count': 100,
         'max_capacity': 10,
         'start_date': BaseTest.ten_day_later,

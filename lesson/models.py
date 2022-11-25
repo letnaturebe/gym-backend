@@ -11,15 +11,15 @@ from lesson.exceptions import NotEnoughCredit, ExceedMaxCapacity, AlreadyRegiste
 
 
 class Gym(models.TextChoices):
-    YEOKSAM = '역삼', _('역삼')
-    DOGOK = '도곡', _('도곡')
+    SEOUL = '서울', _('서울')
+    BUSAN = '부산', _('부산')
 
 
 class LessonType(models.TextChoices):
     WEIGHT = '웨이트', _('웨이트')
-    BOOSTER = '부스터', _('부스터')
-    FUNCTIONAL = '펑셔널', _('펑셔널')
-    MONSTER = '몬스터', _('몬스터')
+    CROSSFIT = '크로스핏', _('크로스핏')
+    SWIM = '수영', _('수영')
+    YOGA = '요가', _('요가')
 
 
 class ReservationType(models.TextChoices):
@@ -29,7 +29,7 @@ class ReservationType(models.TextChoices):
 
 class Lesson(TimeStampedModel):
     gym = models.CharField(
-        verbose_name=_("장소"), max_length=16, choices=Gym.choices, default=Gym.YEOKSAM)
+        verbose_name=_("장소"), max_length=16, choices=Gym.choices, default=Gym.SEOUL)
     type = models.CharField(
         verbose_name=_("수업종류"), max_length=16, choices=LessonType.choices, default=LessonType.WEIGHT)
     credit_count = models.PositiveIntegerField(verbose_name=_("크레딧 개수"))
@@ -71,6 +71,9 @@ class Lesson(TimeStampedModel):
 
 class ReservationManager(models.Manager):
     def reserve(self, user, lesson: Lesson) -> 'Reservation':
+        from user.models import CustomUser
+        user: CustomUser
+
         if lesson.is_full():
             raise ExceedMaxCapacity
 
@@ -84,11 +87,11 @@ class ReservationManager(models.Manager):
                 .exists()):
             raise AlreadyRegistered
 
-        reservation = Reservation.objects.create(lesson=lesson, user=user)
-        if not user.use_credit(reservation):
-            reservation.delete()
+        if not user.has_enough_credit(lesson):
             raise NotEnoughCredit
 
+        reservation = Reservation.objects.create(lesson=lesson, user=user)
+        user.use_credit(reservation)
         return reservation
 
 

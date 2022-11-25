@@ -17,8 +17,8 @@ from lesson.serializers import LessonSerializer
 
 class LessonTestCase(BaseTest):
     lesson_data = {
-        'gym': Gym.YEOKSAM,
-        'type': LessonType.MONSTER,
+        'gym': Gym.SEOUL,
+        'type': LessonType.YOGA,
         'credit_count': 100,
         'max_capacity': 10,
         'start_date': BaseTest.ten_day_later,
@@ -179,8 +179,8 @@ class LessonTestCase(BaseTest):
 
 class ReservationTestCase(BaseTest):
     lesson_data = {
-        'gym': Gym.YEOKSAM,
-        'type': LessonType.MONSTER,
+        'gym': Gym.SEOUL,
+        'type': LessonType.YOGA,
         'credit_count': 100,
         'max_capacity': 10,
         'start_date': BaseTest.ten_day_later,
